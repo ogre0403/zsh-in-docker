@@ -1,0 +1,25 @@
+FROM alpine:latest
+
+
+COPY zsh-in-docker.sh /tmp
+RUN /tmp/zsh-in-docker.sh \
+    -t agnoster \
+    -p git \
+    -p z \
+    -p docker \
+    -p https://github.com/superbrothers/zsh-kubectl-prompt \
+    -a 'autoload -U colors; colors'  \
+    -a 'RPROMPT="%%{$fg[blue]%%}($ZSH_KUBECTL_PROMPT)%%{$reset_color%%}"' \
+    -p https://github.com/zsh-users/zsh-autosuggestions \
+    -a 'ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=2"' \
+    -p https://github.com/zsh-users/zsh-completions
+    
+
+RUN curl -LO "https://dl.k8s.io/release/v1.29.1/bin/linux/amd64/kubectl"  && \
+    chmod +x kubectl && mv kubectl /usr/local/bin/kubectl   
+
+
+
+
+ENTRYPOINT [ "/bin/zsh" ]
+CMD ["-l"]
