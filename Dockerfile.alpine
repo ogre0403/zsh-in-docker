@@ -19,6 +19,18 @@ RUN curl -LO "https://dl.k8s.io/release/v1.29.1/bin/linux/amd64/kubectl"  && \
     chmod +x kubectl && mv kubectl /usr/local/bin/kubectl   
 
 
+RUN sed -i '/## Main/i prompt_newline() { \n\
+ if [[ -n $CURRENT_BG ]]; then\n\
+   echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR\n\
+%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"\n\
+ else\n\
+   echo -n " %{%k%}"\n\
+ fi\n\
+ echo -n " %{%f%}"\n\
+ CURRENT_BG=''\n\
+}' /root/.oh-my-zsh/themes/agnoster.zsh-theme
+
+RUN sed -i 's/  prompt_hg/  prompt_hg\n  prompt_newline/' /root/.oh-my-zsh/themes/agnoster.zsh-theme
 
 
 ENTRYPOINT [ "/bin/zsh" ]
